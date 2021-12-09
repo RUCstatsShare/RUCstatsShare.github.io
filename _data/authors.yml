@@ -1,8 +1,8 @@
 demo author:
-  name      : 默认作者设置
+  name      : 
   type      : person #person/organization
   url       : cn.bing.com #个人主页链接
-  avatar    :  #头像链接
+  avatar    : #头像链接
   bio       : 这是一个默认作者，这是他的介绍文本
   email     : # emaril
   facebook  : # "user_name" the last part of your profile url, e.g. https://www.facebook.com/user_name
