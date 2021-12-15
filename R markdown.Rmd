@@ -1,0 +1,315 @@
+---
+title: "Rmarkdown--开始写吧!"
+output: html_document
+---
+
+## **1 Rmarkdown文档结构**
+
+Rmarkdown文档包括三部分：
+
+- YAML元数据(metadata)
+
+- 正文内容
+
+- R代码
+
+依次进行介绍：
+
+### **1.1 YAML元数据**
+
+YAML元数据位于Rmarkdown文档的开头，用`---`开头和结尾，用以设置文档`标题(title)`、`日期(date)`、`作者(author)`、`输出格式(output_format)`等参数，规定了Rmarkdown报告的基本信息和呈现格式。如：
+
+```markdown
+---
+title: R markdown报告
+author: 中国人民大学统计调查协会
+output: html_document
+---
+```
+
+### **1.2 正文**
+
+Rmarkdown文档的正文内容编辑与通常的文本编辑相同，并可以利用Markdown语法进行格式设置。如：
+
+```markdown
+# 一级标题
+
+## 二级标题
+
+正文段落
+
+**清平调(其一)**
+
+云想衣裳花想容，春风拂柳露华浓。
+
+若非群玉山头见，会向瑶台月下逢。
+
+加粗:**Bold**
+
+斜体字:*Italics*
+
+删除线：~~text~~
+
+列表：
+ 
+ 无序列表：
+   
+   * Item 1
+   
+   * Item 2
+     
+     + Item 2a
+     
+     + Item 2b
+ 
+ 有序列表：
+   
+   1. Item 1
+   
+   2. Item 2
+   
+   3. Item 3
+       
+       + Item 3a
+       
+       + Item 3b
+
+列表嵌套需要四个缩进
+
+上标: a^2
+
+下标: a_1
+
+```
+
+输出结果为：
+
+# 一级标题
+
+## 二级标题
+
+正文段落
+
+**清平调(其一)**
+
+云想衣裳花想容，春风拂柳露华浓。
+
+若非群玉山头见，会向瑶台月下逢。
+
+加粗:**Bold**
+
+斜体字:*Italics*
+
+删除线：~~text~~
+
+列表：
+ 
+ 无序列表：
+   
+   * Item 1
+   
+   * Item 2
+     
+     + Item 2a
+     
+     + Item 2b
+ 
+ 有序列表：
+   
+   1. Item 1
+   
+   2. Item 2
+   
+   3. Item 3
+     
+      + Item 3a
+     
+      + Item 3b
+
+列表嵌套需要四个缩进
+
+上标: a^2^
+
+下标: a~1~
+
+### 1.3 R代码
+
+Rmarkdown代码包括行内代码和代码块
+
+#### 1.3.1 行内代码
+
+行内代码通常以`` ` ``分割。为了输出n个反引号的内容，可以用n+1个反引号引住对应内容。如：`` `y <- sin(x)`  ``输出结果为 `y <- sin(x)`,而``` `` `y <- sin(x)`  `` ```输出结果为 `` `y <- sin(x)` ``。如果行内代码文本以`` `r '\x60r' ` ``开头，系统会将其识别为r代码，如:
+
+````markdown
+`r '\x60\x60\x60{r}
+x <- 1995
+\x60\x60\x60
+中国人民大学统计调查协会成立于\x60r x\x60年'`
+````
+
+输出结果为：
+
+```{r}
+x <- 1995
+```
+
+中国人民大学成立于`r x`年
+
+此时，如果想要以文本形式输出`` `r '\x60r x\x60'` ``，不能简单地通过添加``` `` ```的方法进行输出，亦即``` `r '\x60\x60 \x60r x\x60 \x60\x60'` ```的输出结果仍然为`` `r x` ``。解决思路是将`` `r '\x60r x\x60'` ``作为需要用R语言编译的纯文本处理，对应的代码为``` `r '\x60r \\x60r x\\x60\x60'` ```
+
+#### 1.3.2 代码块
+
+Rmarkdown代码块以```` ```{r options} ````开头，以```` ``` ````结尾。其中options表示代码块输出的参数设置。包括：
+
+- eval: 是否执行代码(TRUE或FALSE)
+
+- echo: 输出中是否包含R源代码(TRUE或FALSE)
+
+- results: 是否输出原生结果(markup或hide或asis或hold)
+
+- collapse: 是否将代码和代码输出合并为一个代码块(TRUE或FALSE)
+
+- warning、message、error: 输出中是否包含警告、参考信息和错误信息(TRUE或FALSE)
+
+- include: 最终输出结果中是否包含该代码块(TRUE或FALSE)
+
+- cache: 是否启用缓存(TRUE或FALSE)
+
+- fig.width、fig.height: 设置图片高度和宽度(如fig.width = 6, fig.height = 4)
+
+- out.width、out.height: 设置图片高度和宽度(如10%)
+
+- fig.align: 图片对齐方式("left", "center"和"right")
+
+- fig.cap: 图片标题
+
+- fig.subcap: 图片副标题
+
+如：
+
+````markdown 
+`r '\x60\x60\x60{r eval = T, echo = T, results = "asis", collapse = TRUE}
+x <- c(1:5)
+y <- c(1:5)
+plot(x,y)
+\x60\x60\x60'`
+````
+
+输出结果为
+
+```{r eval = T, echo = T, results = "asis", collapse = TRUE}
+x <- c(1:5)
+y <- c(1:5)
+plot(x,y)
+```
+
+同样，以纯文本形式输出以上代码块的代码为：
+
+`````markdown
+````markdown
+`r '\x60r \'\\x60\\x60\\x60{r eval = T, echo = T, results = "asis", collapse = TRUE}
+x <- c(1:5)
+y <- c(1:5)
+plot(x,y)
+\\x60\\x60\\x60\'\x60'`
+````
+`````
+参数的不同设置带来的呈现效果差异可以实际操作中尝试，此处不过多展示。
+如果想要对所有代码块执行相同的设置，可以将文档的**第一个代码块**进行如下格式的设置
+
+````markdown
+`r '\x60\x60\x60{r, setup, include = FALSE}
+knitr::opts_chunk$set(fig.width = 8, collapse = TRUE)
+\x60\x60\x60'`
+````
+
+它表示将文档中的图片宽度都设置为8英寸，而所有代码块的collapse参数都设置为TRUE。
+
+## **2 链接、图片和表格**
+
+接着介绍Rmarkdown中如何插入链接、图片和输出表格。
+
+### **2.1 链接**
+
+- 如果文本就是网址，无需特殊格式，输入链接文本，系统会自动识别为超链接。需要注意的是文本应该与周围文本用空格分隔。如： https://bookdown.org/yihui/rmarkdown/
+- 如果文本不同于网址，格式为`` `r '[显示文本](网址)'` ``。如代码`[RStudio](https://www.rstudio.com)`,效果为[RStudio](https://www.rstudio.com)
+
+### **2.2 图片**
+
+- 插入R代码生成的图形
+    - 参见1.3.2节
+    
+- 插入外部图形
+    - 第一种方式:格式为`![图片说明](图片路径)`,如`![中国人民大学统计调查协会](RUC Statistical Investigation Association.jpg){width=25%}(注意等号左右没有空格,如果图片储存路径与Rmarkdown路径不一致，则需要写出完整路径)`结果为
+    
+    ![中国人民大学统计调查协会](RUC Statistical Investigation Association.jpg){width=25%}
+    
+    
+    - 第二种方式：利用代码块可以进行更多的参数设置
+    
+    ````markdown
+    `r '\x60\x60\x60{r, echo=FALSE, out.width = "25%", fig.align = "center", fig.cap = "中国人民大学统计调查协会"}
+    knitr::include_graphics("xxx.png")
+    \x60\x60\x60'`
+    ````
+    
+    输出结果为
+    
+    ```{r, echo=FALSE, out.width = "25%", fig.align = "center", fig.cap = "中国人民大学统计调查协会"}
+    knitr::include_graphics("RUC Statistical Investigation Association.jpg")
+    ```
+    
+### **2.3 表格**
+
+- Markdown格式
+```markdown
+|Column 1|Column 2|Column 3|
+|:------:|:------:|:------:|(|:--:|表示居中格式, 左对齐|:--|,右对齐|--:|)
+|x11     |x12     |x13     |
+|x21     |x22     |x23     |
+```
+输出结果为
+
+|Column 1|Column 2|Column 3|
+|:------:|:------:|:------:|
+|x11     |x12     |x13     |
+|x21     |x22     |x23     |
+
+- 表格为内部对象
+
+如
+
+```{r collapse = T}
+x_data <- data.frame(x = c(1,2,3), y = c(4,5,6))
+x_data
+```
+
+可以利用`knitr::kable`函数呈现。`align`参数设置对齐,"l"为左对齐,"c"为居中,"r"为右对齐。也可以用长度等于列数的向量设置列的对齐方式。`digits`参数控制小数点位数,`caption`给出表标题。如
+
+```{r}
+knitr::kable(x_data, align = "c", digits = 2)
+```
+
+## **3 Rmarkdown导出**
+
+- 手动导出,如图所示, 点击`Knit`图标后选择需要导出的格式即可
+
+![](导出.png){width=50%}
+
+- 命令行导出
+
+命令行导出主要依靠`rmarkdown::render`实现,render函数主要包含如下几个参数：
+
+`input`: 指定需要导出的rmarkdown文件地址
+
+`output_format`: 指定需要导出的文件类型,同样支持pdf、word、html等多种文件格式。若未指定output_format格式,则输出rmarkdown文件中output指定的格式类型。
+
+如
+
+````markdown
+`r '\x60\x60\x60{r}
+rmarkdown::render("test.Rmd")
+\x60\x60\x60'`
+````
+
+

@@ -1,0 +1,415 @@
+---
+title: "RMarkdown书写进阶"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+RMarkdown不仅可以满足综合呈现文字、代码、结果、图表的基本需求，还可以进行更丰富的设置。本期从进阶语法、YAML文档设置、模板使用以及RMarkdown幻灯片制作四个方面对相关内容进行介绍。
+
+## **进阶语法**
+
+### **1.1 文字格式**
+
+`Markdown`本身不支持修改字体、字号和颜色，但在RMarkdown文档中，结合`html`语法可以实现对字体、字号、颜色和背景的设置，如：
+
+```markdown
+- 字体
+
+  + <font face="宋体">我是宋体</font>
+
+  + <font face="楷体">我是楷体</font>
+
+- 字号
+
+  + <font size=5>我是尺寸</font>
+ 
+  + <font size=10>我是尺寸</font>
+
+- 颜色
+
+  + <font color=Blue>我是蓝色</font>
+  
+  + <font color=#871F78>我是紫色</font>
+  
+- 背景
+
+  + <font style="background:Black;"color=White>背景黑色白字</font>
+```
+
+效果为：
+
+- 字体
+
+  + <font face="宋体">我是宋体</font>
+
+  + <font face="楷体">我是楷体</font>
+
+- 字号
+
+  + <font size=5>我是尺寸</font>
+  
+  + <font size=10>我是尺寸</font>
+
+- 颜色
+
+  + <font color=Blue>我是蓝色</font>
+  
+  + <font color=#871F78>我是紫色</font>
+  
+- 背景
+
+  + <font style = "background:Black;" color =White>背景黑色白字</font>
+
+通过命令`<font face="宋体" color=Blue size = 3>中国人民大学统计调查协会</font>`则呈现为蓝色宋体的中国人民大学统计调查协会字样
+<font face="宋体" color=Blue size=3>中国人民大学统计调查协会</font>。
+
+### **1.2 段落格式**
+
+同样，利用`html`语法实现段落格式设置
+
+```markdown
+- 对齐
+  
+  + <p style="text-align:center;">这是居中对齐的段落</p>
+  
+  + <p style="text-align:right;">这是右对齐的段落</p>
+  
+  + <p style="text-align:justify">分散对齐</p>
+  
+- 缩进
+
+  + <p style="text-indent:32px;">首行缩进：这是一行以上的段落，第1行进行了缩进，之后所有行没有缩进。缩进的宽度是可以调节的，这里展示的常见的缩进两个汉字宽度的形式，可以设置为`2em`或`32px`。</p>
+```
+
+- 对齐
+  
+  + <p style="text-align:center;">这是居中对齐的段落</p>
+  
+  + <p style="text-align:right;">这是右对齐的段落</p>
+  
+  + <p style="text-align:justify">分散对齐</p>
+  
+- 缩进
+
+  + <p style="text-indent:32px;">首行缩进：这是一行以上的段落，第1行进行了缩进，之后所有行没有缩进。缩进的宽度是可以调节的，这里展示的常见的缩进两个汉字宽度的形式，可以设置为`2em`或`32px`。</p>
+  
+对书写格式感兴趣的同学可进一步查阅`HTML`语法相关资料。
+
+### **1.3 公式撰写**
+
+Rmarkdown中公式书写语法与Latex语法相同, 包括行内公式和公式块：行内公式以`$`分割,如`$f(x) = \sqrt{x}$`输出结果为$f(x) = \sqrt{x}$; 公式块以`$$`分割，如`$$f(x) = \sqrt{x}$$`, 结果为：
+$$f(x) = \sqrt{x}$$
+常用符号包括：
+
+|符号|语法|
+|:------:|:------:|:------:|
+| $\alpha$  $\beta$  $\gamma$  $\epsilon$  $\delta$  $\theta$| `\alpha` `\beta` `\gamma` `\epsilon` `\delta` `\theta`|
+|$+$ $-$ $\times$ $\div$ $\pm$ $\mp$ $\neq$ $\leq$ $\geq$|`+` `-` `\times` `\div` `\pm` `\mp` `\neq` `\leq` `\geq`|
+|$x_1^2$ $\hat x$ $\bar x$  $\sqrt{4}$  $\sqrt[n]{\pi}$  $\frac{2}{4}x$|`x_1^2` `\hat x` `\bar x` `\sqrt{4}` `\sqrt[n]{\pi}` `\frac{2}{4}x`|
+|$\int$  $\int_0^1$  $dt$  $\partial t$  $\frac{\partial^2 y}{\partial x_1\,\partial x_2}$  $\lim_{n \to \infty}x_n$|`\int` `\int_0^1` `dt` `\partial t` `\frac{\partial^2 y}{\partial x_1\,\partial x_2}` `\lim_{n \to \infty}x_n`|
+|$\sum_{a}^b$  $\prod_{a}^{b}$  $n \choose 2$|`\sum_{a}^b` `\prod_{a}^{b}` `n \choose 2`|
+|$$\begin{vmatrix}
+x & y \\
+z & v
+\end{vmatrix}$$|```
+\begin{vmatrix} 
+x & y \\
+z & v
+\end{vmatrix}```|
+
+例如，`f(X) = \frac{1}{(\sqrt{2\pi})^n}|\Sigma|^{-\frac{1}{2}}e^{-\frac{1}{2}(x-u)^T\Sigma^{-1}(x-u)}`为多元正态分布密度函数$f(X) = \frac{1}{(\sqrt{2\pi})^n}|\Sigma|^{-\frac{1}{2}}e^{-\frac{1}{2}(x-u)^T\Sigma^{-1}(x-u)}$
+
+更多公式书写语法的细节，可以参考LATEX相关语法资料。
+
+### **1.4 交互式图表**
+
+RMarkdown不仅可以呈现简单的图表结果，还支持呈现交互可视化的R库输出的交互式图表，常用的交互可视化的R库包括：DT、rCharts、recharts、plotly等，如：
+
+```{r, collapse = T, warning = F}
+library(DT)
+datatable(iris)
+```
+
+```{r, warning = F, collapse = T}
+library(plotly)
+plot_ly(ggplot2::midwest, x = ~percollege, color = ~state, type = "box")
+```
+
+RMarkdown将多种语法为其所用，真正实现了R + Markdown = $\infty$
+
+# **进阶知识-YAML详解**
+
+前文已经介绍了YAML，下面介绍一些常用的元数据设置。**部分设置只在其相应的模板中有效**，因此最好根据模板的文档检查可选功能参数。
+
+## 2.1 目录设置
+
+```yaml
+---
+title: "标题"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+```
+
+使用`toc:true`可以指定自动生成目录；`toc_float: true`可以规定目录悬停于侧边栏（对于某些巨长的作业，这个设置堪称福音——懂的都懂）；`collapsed`控制文档第一次打开时目录是否被折叠；`smooth_scroll: true`使得通过导览窗格跳跃时页面有平滑滚动过程显示。
+
+## 2.2 章节自动编号
+
+`number_sections: true`设置章节自动编号，HTML输出与PDF输出都支持此功能。
+
+## 2.3 HTML特有设置
+下面介绍几个导出 HTML 时特有的设置。   
+`html_document` 自带多个不同的主题，可用的主题名称有default, cerulean, journal, flatly, darkly 等等。    
+`highlight`属性设置程序语言语法高亮样式，可取值有 default, tango, pygments, kate, monochrome, espresso, zenburn等。用 null 表示取消语法高亮。    
+不论有没有应用主题和代码高亮，都可以使用`css`参数指定附加样式表。附加样式表使用略复杂，但是自由度很高。有兴趣的同学可以查询相关资料，在此不加详述。
+
+```yaml
+---
+title: "标题"
+output:
+  html_document:
+    theme: null
+    highlight: null
+    css: styles.css
+---
+```
+
+#### 图片属性设置
+下列参数可以调整生成的 HTML 文档中图片的属性：    
+`fig_width`，`fig_height`指定图片显示时的宽和高（默认为 7 × 5，单位英寸）。`fig_retina`开启视网膜屏幕优化（默认为 2，设为 null 时关闭优化）。`fig_caption`控制是否渲染图注。`dev`设置图片输出格式，默认为png。这些参数也可以在代码块中具体设置。示例如下：
+
+```yaml
+---
+title: "标题"
+output:
+  html_document:
+    fig_width: 7
+    fig_height: 6
+    fig_caption: true
+    dev: c("png","pdf")
+---
+```
+
+YAML 元数据中能设置的属性还有很多，如数据框输出设置、MathJax 库配置、使用自定义 HTML 模板等。同学们可以参考其他资料，更加深入学习。
+
+
+
+# **进阶知识-模板使用**
+
+R Markdown可以很便捷地导出为HTML格式，但或许大家对于R Markdown自带模板并不十分满意，希望找到一个更好看的模板让导出的HTML更加赏心悦目。
+实际上，R Markdown有很多模板可供使用，以下主要介绍`prettydoc`，`rmdformats`，`rticles`等包内的主题。
+
+在使用时首先需要利用`install.packages`函数导入相应的包，之后按照示例语法输入即可正常渲染。）
+
+## 3.1 prettydoc
+
+`prettydoc`是R Markdown的轻量级但十分好看的主题，其中常见的有如下五种主题：
+
+* cayman
+* tactile
+* architect
+* leonids
+* hpstr
+
+
+### 示例: cayman
+
+在使用cayman模板前，需要首先通过install.packages("prettydoc")语句安装prettydoc包。安装之后则在YAML元数据中输入以下内容即可。更改theme为prettydoc包中不同的主题则会得到不同的导出样式。
+
+```yaml
+---
+title: "Creating Pretty Documents From R Markdown"
+author: "The Cayman Theme"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+---
+```
+
+![](https://files.mdnice.com/user/18260/fa061edd-c065-4f7c-8d8a-8043f7aacd04.png)
+
+
+### 示例: architect
+
+
+```yaml
+---
+title: "Creating Pretty Documents From R Markdown"
+author: "The Architect Theme"
+output:
+  prettydoc::html_pretty:
+    theme: architect
+---
+```
+
+![](https://files.mdnice.com/user/18260/38435a64-b413-44a9-9891-20886670c0b8.png)
+
+
+## 3.2 rmdformats
+
+`rmdformats`提供独特和有吸引力的样式，包括多个HTML输出格式，常见的主题有以下几种：
+
+* downcute
+* robobook
+* material
+* readthedown
+* html_clean
+* html_docco
+* lockdown
+
+下面以readthedown以及material主题为例进行展示。
+
+### 示例: readthedown
+
+同样，在使用readthedown模板前，需要首先通过install.packages("rmdformats")语句安装rmdformats包。安装之后则在YAML元数据中输入以下内容即可。更改rmdformats::readthedown则会得到不同的导出样式。
+
+```yaml
+---
+title: "readthedown template example"
+aythor: "juda"
+date: "2021-10-17"
+output:
+  rmdformats::readthedown
+---
+```
+
+![](https://files.mdnice.com/user/18260/c9a9bc2a-8932-4487-824b-94c488e72788.png)
+
+### 示例: material
+
+```yaml
+---
+title: "material template example"
+date: "`r Sys.Date()`"
+output:
+  rmdformats::material
+---
+```
+
+![](https://files.mdnice.com/user/18260/24d0a817-58fe-4cd7-aad7-21f9668ed6cb.png)
+
+## 3.3 rticles
+
+`rticles`提供了一套自定义的 R Markdown LaTeX 格式和各种格式的模板，方便大家编写pdf格式的文章。由于其中模板较多，就不一一列举了，以下以ctex主题为例，因为这个包对于中文PDF写作较为重要。
+
+### 示例: ctex
+
+同样，在使用ctex模板前，需要首先通过install.packages("rticles")语句安装rticles包。安装之后则在YAML元数据中输入以下内容即可导出中文PDF。
+
+```yaml
+---
+title: "在R Markdown文档中使用中文"
+documentclass: ctexart
+output:
+  rticles::ctex:
+    fig_caption: yes
+    number_sections: yes
+    toc: yes
+---
+```
+
+![](https://files.mdnice.com/user/18260/a2749b80-dc1d-4405-ae92-fd96146e52c3.png)
+
+
+
+# **用RMarkdown展示吧！——Beamer**
+
+你知道吗？RMarkdown还可以制作幻灯片哦！RMarkdown支持生成网页格式幻灯片（slidy_presentation和ioslides_presentation），以及Powerpoint幻灯片（powerpoint_presentation），本文主要介绍LaTeX beamer格式的PDF幻灯片（beamer_presentation）。注：要导出以上几种格式的幻灯片，需将YAML中的output属性设置为括号内的内容，如，`output: slidy_presentation`。详细内容读者可以自行查询。    
+我们先来看下Beamer格式幻灯片的效果：
+
+
+![beamer](beamer.jpg)
+想象下，当你结束了一次成功的课堂pre，被同学问：“你这幻灯片用什么模板做的呀？”你：“RMarkdown。”有没有觉得瞬间有那么一丢丢高大上（误）。言归正传，相对于用Powerpoint制作幻灯片，用RMarkdown有以下特点：     
+
++ 兼容$LaTeX$公式。Beamer一开始就是一个$LaTeX$演示文稿工具，后来RMarkdown也支持导出。
++ 能够展示R代码及运行结果。
++ 功能简单，只需掌握基本语法即可使用。
++ 简洁大方，尤其适合于学术展示。但同时，由于不具备繁复的特效，不推荐在商务场景使用。       
+下面详细介绍用RMarkdown制作Beamer的方法。
+
+## 4.1 前置环境
+假设你已经安装了R和RStudio，装好了`rmarkdown`、`knitr`等基本包。制作Beamer，还需要安装`tinytex`这个包，这个包相当于`Texlive`软件的轻量版。不同的Beamer模板可能会有特殊的要求，在使用模板之前请先看模板说明文件。常见的要求可能有`rticles`包（为了支持中文），或者`Texlive`软件等。
+
+## 4.2 基本语法
+首先需要在YAML元数据中指定beamer_presentation输出格式，即`output: beamer_presentation`。
+
+* 正文基本可以使用Markdown语法来编写：
+
+  + 使用#和##，即一级标题、二级标题，给幻灯片分页。使用`---`也可以给幻灯片分页，且不更改标题。
+  
+  + 插入图片、公式、表格、代码块等的语法与导出HTML时基本相同。
+举例如下：    
+
+```beamer
+---
+title: "Beamer"
+author: "RUC diaoxie"
+date: November 16, 2021
+output: beamer_presentation
+---
+
+# Course1
+
+## RMarkdown
+
+- YAML
+- knit R
+- main
+
+# Course2
+
+## Picture
+
+![RUCdiaoxie](RUCdiaoxie.jpg){width=50%}
+
+---
+
+$$
+E=mc^2
+$$
+
+```
+效果如下所示： 
+
+![Beamer效果](mybeamer.jpg)
+
+
+## 4.3 Beamer格式的常用YAML设置
+
+刚才导出的Beamer是不是有点丑？我们得手动增加一些设置。
+
+```常用设置
+output: 
+  beamer_presentation: 
+    slide_level: 2
+    fonttheme: structurebold
+    theme: Ilmenau
+    colortheme: beaver
+    latex_engine: xelatex
+header-includes: 
+  - \usepackage{ctex}
+```
+
+解释如下：   
+
++ `fonttheme`：主题字体   
++ `theme`：Beamer主题
++ `colortheme`：颜色主题
++ `latex_engine`：编译引擎，一般设为xelatex
++ `header-includes`：调用packages，中文写作一定要调用`ctex`包。
++ `slide_level`：设置能够给幻灯片分页的最低标题级别。
+
+其中主题和颜色主题可参考网站：https://hartwork.org/beamer-theme-matrix/。  
+大家可以试一下加入这些设置之后，新导出的Beamer会是什么样子。
+
+## 4.4 Beamer 模板
+互联网上有海量的Beamer模板等待着大家探索。这里分享一下统计学院李扬老师制作的RUCbeamer模板：https://github.com/rucliyang/RUCbeamer 本节开头的第一张图即为用此模板所导出的Beamer。
+
